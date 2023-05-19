@@ -1,100 +1,48 @@
 const express = require('express');
 const router = express.Router();
 
-// for register api
-router.post('/register', async (req, res)=>{
-
-    try {
-    
-    const{companyNam} = req.body;
-   
-   let data = await fetch("http://localhost:3000/register", {
-        method: "POST",
-        body: JSON.stringify({
-          companyName : companyNam
-        }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8"
-        }
-      });
-
-    //   console.log(data)
-      const dat = await  data.json()
-    res.send(dat) 
-        
-} catch (error) {
-    console.error(error.message);
-    res.status(500).send("Internal Server Error");
-}
-})
-
-//for Auth
-
-router.post('/auth', async (req, res)=>{
-
-    try {
-    
-    const{companyName,clientID,clientSecret} = req.body;
-   let data = await fetch("http://localhost:3000/auth", {
-        method: "POST",
-        body: JSON.stringify({
-            "companyName": companyName,
-            "clientID": clientID,
-            "clientSecret": clientSecret
-        }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8"
-        }
-      });
-
-    //   console.log(data)
-      const dat = await  data.json()
-    res.send(dat) 
-        
-} catch (error) {
-    console.error(error.message);
-    res.status(500).send("Internal Server Error");
-}
-})
-
-// for List of trains
-router.get('/trains', async (req, res)=>{
+// get method bfhl
+router.get('/bfhl', async (req, res)=>{
         try {
-            const{authorization} = req.headers;
-            console.log(authorization)
-            let data = await fetch("http://localhost:3000/trains", {
-                 method: "GET",
-                 headers: {
-                   "Content-type": "application/json; charset=UTF-8",
-                   "Authorization" : "Bearer" + authorization
-                 }
-               });
-         
-             //   console.log(data)
-               const dat = await  data.json()
-             res.send(dat)   
+            let data = {
+              "opration_code":1
+            }
+             res.status(200).json(data)   
         } catch (error) {
             console.error(error.message);
             res.status(500).send("Internal Server Error");
         }
     })
 
-    // particular train number details
-    router.get('/trains/:id', async (req, res)=>{
+    
+
+    // post method bfhl
+    router.post('/bfhl', async (req, res)=>{
         try {
-            const{authorization} = req.headers;
-            const trainNo = req.params.id;
-            let data = await fetch(`http://localhost:3000/trains/${trainNo}`, {
-                 method: "GET",
-                 headers: {
-                   "Content-type": "application/json; charset=UTF-8",
-                   "Authorization" : "Bearer" + authorization
-                 }
-               });
-         
-             //   console.log(data)
-               const dat = await  data.json()
-             res.send(dat)   
+            let {data}  = req.body
+            console.log(data)
+            
+            // let length = data.length;
+            let string_data = []
+            let number_data = []
+            for (let index = 0; index < data.length; index++) {
+              if (typeof data[index] == "number") {
+                number_data.push(data[index].toString())
+              }
+              else{
+                string_data.push(data[index])
+              }
+            }
+            var response = {
+              "is_success": true,
+              "user_id": "nikhil_taparia_17092002", 
+              "email" : "nt8770@srmist.edu.in",
+              "roll_number":"RA2011042010095",
+              "numbers": number_data,
+              "alphabets": string_data
+            }
+
+            res.status(200).json(response)
         } catch (error) {
             console.error(error.message);
             res.status(500).send("Internal Server Error");
